@@ -1,14 +1,31 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
 import { makeRemoteAddAccount } from '../../main/factories/usecases/load-customer-factory'
 import { onMounted, ref } from 'vue'
-const addAccout = makeRemoteAddAccount()
 
-const data = ref()
+// Define the type for CustomerResultModel to match the expected structure
+type CustomerResultModel = {
+  name: string
+  phone: string
+  email: string
+  address: string
+  cpfCnpj: string
+  dateOfBirth: string
+  gender: string
+  maritalStatus: string
+  profession: string
+  nationality: string
+  observations: string
+  documents: any[]
+}
+
+const addAccount = makeRemoteAddAccount()
+
+const data = ref<CustomerResultModel[]>([])
 
 onMounted(() => {
-  const apidata = (data.value = addAccout.load().then((response) => response))
-  console.log(apidata)
+  addAccount.load().then((res) => {
+    data.value = res as unknown as CustomerResultModel[]
+  })
 })
 </script>
 

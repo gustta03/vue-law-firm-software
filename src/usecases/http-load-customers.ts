@@ -1,14 +1,14 @@
-import { HttpClient, HttpStatusCode } from '../infra/contracts/http-protocol'
+import { HttpStatusCode } from '../infra/contracts/http-protocol'
+import { LoadAllCustomerRepository, Repository } from '../infra/contracts/http-repository'
 import { LoadCustomer, LoadAllCustomer } from './contracts/load-customer'
 
 export class LoadAllCustomerUseCase implements LoadCustomer {
-  constructor(private readonly loadCustomerRepository: HttpClient<LoadAllCustomer.Model>) {}
+  constructor(
+    private readonly loadCustomerRepository: Repository<LoadAllCustomerRepository.Result>
+  ) {}
 
   async load(): Promise<LoadAllCustomer.Model> {
-    const HttpResponse = await this.loadCustomerRepository.request({
-      url: 'http://localhost:5858/api/customer/all',
-      method: 'get'
-    })
+    const HttpResponse = await this.loadCustomerRepository.load()
 
     switch (HttpResponse.statusCode) {
       case HttpStatusCode.ok:

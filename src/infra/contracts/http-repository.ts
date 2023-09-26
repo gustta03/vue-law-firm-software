@@ -1,9 +1,10 @@
 import { CustomerResultModel } from '../../domain/models/customer-model'
+import { HttpResponse } from './http-protocol'
 
-export interface Repository {
-  loadAll: () => Promise<LoadAllCustomerRepository.Result>
+export interface Repository<R = any> {
+  load: () => Promise<HttpResponse<R>>
 }
 
-declare namespace LoadAllCustomerRepository {
+export declare namespace LoadAllCustomerRepository {
   export type Result = CustomerResultModel
 }
