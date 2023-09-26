@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.app.json",
+  "exclude": [],
+  "files": [
+    "/home/gusta/Desktop/vue-enterprise-boilerplate/src/app/App.vue"
+    // ... outros arquivos ...
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "lib": [],
+    "types": ["node", "jsdom"]
+  }
+}
