@@ -1,4 +1,4 @@
-import { HttpClient, HttpStatusCode } from '../data/contracts/http-protocol'
+import { HttpClient, HttpStatusCode } from '../infra/contracts/http-protocol'
 import { LoadCustomer, LoadAllCustomer } from './contracts/load-customer'
 
 export class LoadAllCustomerUseCase implements LoadCustomer {
@@ -6,8 +6,8 @@ export class LoadAllCustomerUseCase implements LoadCustomer {
 
   async load(): Promise<LoadAllCustomer.Model> {
     const HttpResponse = await this.loadCustomerRepository.request({
-      url: '',
-      method: 'post'
+      url: 'http://localhost:5858/api/customer/all',
+      method: 'get'
     })
 
     switch (HttpResponse.statusCode) {
