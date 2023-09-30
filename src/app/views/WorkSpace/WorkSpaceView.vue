@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import MainContent from '../../components/MainContent.vue'
-import officeimg from '../../assets/office.svg'
-import CustomStore from 'devextreme/data/custom_store'
-import DocumentModal from '../../components/DocumentModal.vue'
-import CaseModal from '../../components/CasesModal.vue'
+import { ref, onMounted, computed } from 'vue';
+import MainContent from '../../components/MainContent.vue';
+import CustomStore from 'devextreme/data/custom_store';
+import DocumentModal from '../../components/DocumentModal.vue';
+import CaseModal from '../../components/CasesModal.vue';
 
+import { DxButton } from 'devextreme-vue'
 
 import { makeRemoteGetWorkSpaces } from '../../../main/factories/usecases/workspace/load-workspace-tasks'
 import { makeRemoteDeleteTask } from '../../../main/factories/usecases/workspace/delete-workspace-factory'
-import { ref, onMounted, computed } from 'vue'
 import { DxDataGrid, DxEditing, DxPaging, DxColumn, DxLookup } from 'devextreme-vue/data-grid'
 import { makeRemoteInsertTask } from '../../../main/factories/usecases/workspace/insert-workspace-factory'
 import { makeRemoteEditTask } from '../../../main/factories/usecases/workspace/edit-workspace-task-factory'
@@ -16,78 +16,95 @@ import { makeRemoteDocument } from '../../../main/factories/usecases/documents/l
 import { makeRemoteLoadCustomer } from '../../../main/factories/usecases/customer/load-customer-factory'
 import { makeRemoteLoadCases } from '../../../main/factories/usecases/cases/load-all-cases-factory'
 
-import { DxButton } from 'devextreme-vue'
-
-
 interface Task {
-  description: string
-  owner: string
-  priority: string
-  id: string
+  description: string;
+  owner: string;
+  priority: string;
+  id: string;
 }
 
-const getAllWorkSpace = makeRemoteGetWorkSpaces()
-const deleteWorkspaceTask = makeRemoteDeleteTask()
-const insterWorkSpaceTask = makeRemoteInsertTask()
-const editWorkSpaceTask = makeRemoteEditTask()
-const loadDocument = makeRemoteDocument()
-const loadCustomer = makeRemoteLoadCustomer()
-const loadCases = makeRemoteLoadCases()
+const getAllWorkSpace = makeRemoteGetWorkSpaces();
+const deleteWorkspaceTask = makeRemoteDeleteTask();
+const insertWorkSpaceTask = makeRemoteInsertTask();
+const editWorkSpaceTask = makeRemoteEditTask();
+const loadDocument = makeRemoteDocument();
+const loadCustomer = makeRemoteLoadCustomer();
+const loadCases = makeRemoteLoadCases();
 
-const workspaceData = ref<Task[]>([])
-const isLoading = ref(true)
-const documentData = ref<any[]>([])
-const customersData = ref<any[]>([])
-const isDocumentModalOpen = ref(false)
-const isCaseModalOpen = ref(false)
-const cases = ref<any[]>([])
-const buttonActionType = ref<'cases' | 'doc' | null>(null)
+const workspaceData = ref<Task[]>([]);
+const isLoading = ref(true);
+const documentData = ref<any[]>([]);
+const customersData = ref<any[]>([]);
+const isDocumentModalOpen = ref(false);
+const isCaseModalOpen = ref(false);
+const cases = ref<any[]>([]);
+const buttonActionType = ref<'cases' | 'doc' | null>(null);
 
 onMounted(async () => {
-  documentData.value.push(await loadDocument.load())
-  workspaceData.value.push(await getAllWorkSpace.load())
-  cases.value.push(await loadCases.load())
-  console.log(cases.value)
-  isLoading.value = false
-})
+  try {
+    documentData.value.push(await loadDocument.load());
+    workspaceData.value.push(await getAllWorkSpace.load());
+    cases.value.push(await loadCases.load());
+    isLoading.value = false;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+});
 
 const workspaceTaskData = new CustomStore({
   key: 'id',
-  insert: (values) => insterWorkSpaceTask.insert(values),
+  insert: (values) => insertWorkSpaceTask.insert(values),
   load: async () => await getAllWorkSpace.load(),
   remove: async (key: string) => {
-    await deleteWorkspaceTask.deleteById(key)
+    try {
+      await deleteWorkspaceTask.deleteById(key);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   },
-  update: async (key, values) =>
-    await editWorkSpaceTask.edit({
-      id: key,
-      ...values
-    })
-})
+  update: async (key, values) => {
+    try {
+      await editWorkSpaceTask.edit({
+        id: key,
+        ...values,
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  },
+});
 
 const openDocumentModal = async () => {
-  customersData.value.push(await loadCustomer.load())
-  isDocumentModalOpen.value = true
-  buttonActionType.value = 'doc'
-}
+  try {
+    customersData.value.push(await loadCustomer.load());
+    isDocumentModalOpen.value = true;
+    buttonActionType.value = 'doc';
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
 
 const openCaseModal = async () => {
-  customersData.value.push(await loadCustomer.load())
-  isCaseModalOpen.value = true
-  buttonActionType.value = 'cases'
-}
+  try {
+    customersData.value.push(await loadCustomer.load());
+    isCaseModalOpen.value = true;
+    buttonActionType.value = 'cases';
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
 
-const documentLenght = computed(() => {
-  return Object.keys(documentData.value[0]).length
-})
+const documentLength = computed(() => {
+  return Object.keys(documentData.value[0] || {}).length;
+});
 
-const casesLenght = computed(() => {
-  return Object.keys(cases.value[0]).length
-})
+const casesLength = computed(() => {
+  return Object.keys(cases.value[0] || {}).length;
+});
 
 const hasData = computed(() => {
-  return workspaceData.value.length > 0
-})
+  return workspaceData.value.length > 0;
+});
 </script>
 
 <template>
@@ -137,7 +154,7 @@ const hasData = computed(() => {
             <p>Processos/casos</p>
             <DxButton @click="openCaseModal" text="Adicionar" />
           </div>
-          <p>Processos movimentados recentemente: {{ casesLenght }}</p>
+          <p>Processos movimentados recentemente: {{ casesLength }}</p>
         </div>
         <div class="document-widget">
           <div>
@@ -147,7 +164,7 @@ const hasData = computed(() => {
           
            <DocumentModal :data="customersData" button-action-type="doc" :is-modal-open="isDocumentModalOpen" @close-modal="isDocumentModalOpen = false" />
            <CaseModal button-action-type="Processos e casos" :data="customersData" :is-modal-open="isCaseModalOpen" @close-modal="isCaseModalOpen = false" />
-          <p>Documentos movimentados recentemente: {{ documentLenght }}</p>
+          <p>Documentos movimentados recentemente: {{ documentLength }}</p>
         </div>
       </div>
     </div>
