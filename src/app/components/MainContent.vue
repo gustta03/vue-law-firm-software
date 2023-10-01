@@ -8,7 +8,6 @@ const contentType = defineProps({
   <div class="main-workspace-content">
     <div class="header-buttons">
       <h2>{{ contentType.pageTitle }}</h2>
-      <button>Adicionar tarefa</button>
     </div>
 
     <slot></slot>

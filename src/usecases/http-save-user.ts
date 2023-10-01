@@ -1,13 +1,20 @@
-import { HttpStatusCode } from '../infra/contracts/http-protocol'
-import { SaveUserRepository } from '../infra/contracts/http-save-user'
+import { AccountModel } from '../domain/models/account-model'
+import { HttpStatusCode } from '../infra/protocols/http-protocols'
 import { SaveUserResult, SaveUser } from './contracts/save-customer'
+import { HttpClient } from '../infra/protocols/http-protocols'
 
-export class SaveUseUseCase implements SaveUser {
-  constructor(private readonly loadCustomerRepository: SaveUserRepository) {}
+export class SaveUserUseCase implements SaveUser {
+  constructor(
+    private apiUrl: string,
+    private readonly httpRequestRepository: HttpClient<AccountModel>
+  ) {}
 
   async save(params: SaveUserResult.Param): Promise<SaveUserResult.Model> {
-    const HttpResponse = await this.loadCustomerRepository.save(params)
-
+    const HttpResponse = await this.httpRequestRepository.request({
+      url: this.apiUrl,
+      method: 'post',
+      body: params
+    })
     switch (HttpResponse.statusCode) {
       case HttpStatusCode.ok:
         if (HttpResponse.body !== undefined) {
@@ -17,6 +24,8 @@ export class SaveUseUseCase implements SaveUser {
         }
       case HttpStatusCode.forbidden:
         throw new Error('Forbidden')
+      case HttpStatusCode.badRequest:
+        throw new Error('Algo inesperado aconteceu, tente novamente')
       default:
         throw new Error('Unhandled status code')
     }

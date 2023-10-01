@@ -1,7 +1,8 @@
-import './assets/main.css'
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+
+import 'primeicons/primeicons.css';
+import 'devextreme/dist/css/dx.light.css';
 
 import App from './App.vue'
 import router from './router'

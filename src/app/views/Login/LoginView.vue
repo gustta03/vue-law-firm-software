@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { makeCacheStorage } from '../../../main/factories/cache/local-storage-factory';
-import { makeRemoteSaveUser } from '../../../main/factories/usecases/save-user-factory'
+import { makeRemoteSaveUser } from '../../../main/factories/usecases/user/save-user-factory'
 import { ref } from 'vue'
 import router from '../../router/index'
-
+import { useRoute } from 'vue-router';
+const isHomeRoute = useRoute().path === '/login';
 const addAccount = makeRemoteSaveUser()
 const cache = makeCacheStorage()
 
@@ -12,8 +13,7 @@ const name = ref('')
 const email = ref('')
 const password = ref('')
 
-
-function setValueOnSubmitUser(response: string) {
+function setValuesOnSubmitUser(response: string) {
   data.value = response
   cache.set('admin:accessToken', response)
   router.push('/')
@@ -26,15 +26,14 @@ async function handleSubmitUser() {
     password: password.value
   })
   if (addAccountRequest.accessToken) {
-    setValueOnSubmitUser(addAccountRequest.accessToken)
+    setValuesOnSubmitUser(addAccountRequest.accessToken)
   }
 }
-
 
 </script>
 
 <template>
-  <div class="login-form-container">
+  <div class="login-form-container" v-if="isHomeRoute">
     <h1>Acesse a plataforma</h1>
     <p>Faça login ou registre-se para começar a gerenciar seu escritório ainda hoje.</p>
     <form @submit.prevent="handleSubmitUser" class="form-container">
@@ -51,7 +50,7 @@ async function handleSubmitUser() {
         <input type="password" placeholder="Digite sua senha" required v-model="password" />
       </div>
 
-      <button @submit.prevent="handleSubmitUser">Entrar</button>
+      <button class="login-button" @submit.prevent="handleSubmitUser">Entrar</button>
 
     </form>
   </div>
@@ -70,7 +69,7 @@ async function handleSubmitUser() {
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
-  width: 80%;
+  width: 60%;
   height: 20rem;
 }
 
@@ -84,13 +83,13 @@ input {
   padding: 10px 20px 10px 5px;
 }
 
-button {
+.login-button {
   width: 94%;
   height: 54px;
   cursor: pointer;
   border: 0;
   border-radius: 4px;
-  background-color: dodgerblue;
+  background-color: #237FD4;
   color: #FFFF;
 }
 </style>

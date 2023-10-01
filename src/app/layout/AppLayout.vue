@@ -1,13 +1,14 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import { makeCacheStorage } from '../../main/factories/cache/local-storage-factory'
-const chache = makeCacheStorage()
-const isLogged = chache.get('admin:accessToken')
+const isHomeRoute = useRoute().path === '/';
+
 </script>
 
 <template>
-  <div class="layout-container">
-    <div class="sidebar-container" v-if="isLogged">
+  <div class="layout-container" v-if="isHomeRoute">
+    <div class="sidebar-container">
       <ul>
         <li>
           <router-link to="/workspace">
@@ -54,6 +55,8 @@ const isLogged = chache.get('admin:accessToken')
   height: 100vh;
   display: flex;
   background-color: rgb(255, 255, 255);
+  border-right: 1px solid #f1f1f1;
+  border-left: 1px solid #DFE7EF;
   padding: 0;
   margin: 0;
   top: 0;

@@ -2,8 +2,8 @@
   "extends": "./tsconfig.app.json",
   "exclude": [],
   "files": [
-    "/home/gusta/Desktop/vue-enterprise-boilerplate/src/app/App.vue"
-    // ... outros arquivos ...
+    "/home/gusta/Desktop/vue-enterprise-boilerplate/src/app/App.vue",
+    "/home/gusta/Desktop/vue-enterprise-boilerplate/src/infra/cache/local-storage.ts"
   ],
   "compilerOptions": {
     "composite": true,
