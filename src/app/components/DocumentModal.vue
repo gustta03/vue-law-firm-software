@@ -1,48 +1,55 @@
-<script setup>
+<script setup lang="ts">
 import { DxPopup, DxButton } from 'devextreme-vue'
-import { ref, watch } from 'vue'
-import { makeRemoteSaveDocument } from '../../main/factories/usecases/documents/save-document-factory'
-import { makeRemoteDocument } from '../../main/factories/usecases/documents/load-docment-factory'
-import { DxToast } from 'devextreme-vue/toast'
+import { ref, watch, onMounted, } from 'vue'
+import { dependencies } from '../di'
+import CustomStore from 'devextreme/data/custom_store';
 
-const saveDocument = makeRemoteSaveDocument()
-const loadDocument = makeRemoteDocument()
-
-const title = ref('')
-const description = ref('')
-const owner = ref('')
-const url = ref('')
-const customerId = ref('')
+const { loadCustomer, saveDocument } = dependencies
+const customersOptionsData = ref<Array<any>>([])
 const isToastVisible = ref(false)
 const toastMessage = ref('')
 const toastType = ref('success')
 
+
+const formData = ref({
+  description: '',
+  customerId: '',
+  title: '',
+  owner: '',
+  url: ''
+})
+
 defineProps({
   buttonActionType: String,
-  data: Array,
   isModalOpen: Boolean
 })
 
-const insertDocumentAndCloseModal = async () => {
+onMounted(async () => {
+  customersOptionsData.value.push(await loadCustomer.load())
+})
+
+const documentData = new CustomStore({
+  key: '_id',
+  load: async () => await insertDocumentAndCloseModal()
+})
+
+async function insertDocumentAndCloseModal() {
   try {
-    await saveDocument.save({
-      title: title.value,
-      description: description.value,
-      owner: owner.value,
-      url: url.value,
-      customerId: customerId.value
-    })
-    toastMessage.value = "Documento salvo com sucesso"
-    isToastVisible.value = true
-    loadDocument.load()
+    const httpResponse = await saveDocument.save(formData.value)
+    if (httpResponse) {
+      showToast({ message: 'Caso salvo com sucesso', type: 'success' })
+      this.$root.$emit('documentSaved', httpResponse);
+      closeModal()
+    } else {
+      showToast({ 
+        message: 'um erro inesperado acontenceu, tente novamente!', type: 'error' 
+      })
+    }
 
+    return httpResponse
   } catch (error) {
-    // toastType.value = 'erro'
-    toastMessage.value = error
-    isToastVisible.value = true
-
+    showToast({ message: error, type: 'error' })
   }
-  closeModal() 
 }
 
 const emits = defineEmits(['closeModal'])
@@ -56,13 +63,17 @@ watch(
   (newValue, oldValue) => {
     if (newValue && !oldValue) {
       setTimeout(() => {
-        isToastVisible.value = false;
-      }, 1000); 
+        isToastVisible.value = false
+      }, 1000)
     }
   }
 )
 
-
+function showToast({ message, type }: { message: string; type: string }) {
+  isToastVisible.value = true
+  toastType.value = type
+  toastMessage.value = message
+}
 
 </script>
 
@@ -70,28 +81,29 @@ watch(
   <DxPopup
     :visible="isModalOpen"
     title="Documento"
-    @onHidden="closeModal"
+    @onHidden="closeModal()"
     :width="400"
     :height="380"
   >
     <div class="modal-content">
       <label for="taskOwner">Titulo:</label>
-      <input type="text" id="taskOwner" v-model="title" />
+      <input type="text" v-model="formData.title" />
       <label for="taskDescription">Descrição do documento</label>
-      <input type="text" id="taskOwner" v-model="description" />
-      <input type="text" id="taskOwner" v-model="owner" />
+      <input type="text" v-model="formData.description" />
+      <input type="text" v-model="formData.owner" />
       <label>Cliente</label>
-      <select class="select-customers" v-model="customerId">
+      <select class="select-customers" v-model="formData.customerId">
         <option disabled value="">Selecione um usuário</option>
-        <option v-for="user in data[0]" :key="user._id" :value="user._id">
+        <option v-for="user in customersOptionsData[0]" :key="user._id" :value="user._id">
           {{ user.name }}
         </option>
       </select>
+
       <!-- <input type="text" id="taskOwner" /> -->
       <label for="taskOwner">URL:</label>
-      <input type="text" id="taskOwner" v-model="url" />
+      <input type="text" id="taskOwner" v-model="formData.url" />
       <div class="modal-buttons-container">
-        <DxButton @click="insertDocumentAndCloseModal">Salvar documento</DxButton>
+        <DxButton @click="documentData.load()">Salvar documento</DxButton>
         <DxButton id="btn-close" @click="closeModal">Fechar modal</DxButton>
       </div>
     </div>
