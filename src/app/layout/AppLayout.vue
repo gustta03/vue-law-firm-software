@@ -17,7 +17,7 @@ const hideSideBar = computed(() => {
     <div class="sidebar-container" v-if="hideSideBar">
       <ul>
         <li>
-          <router-link to="/workspace">
+          <router-link to="/">
             <i class="pi pi-desktop" style="color: #708090"></i> 
             <span>Area de trabalho</span>
           </router-link>
