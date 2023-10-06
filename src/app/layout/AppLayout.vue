@@ -1,14 +1,20 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { makeCacheStorage } from '../../main/factories/cache/local-storage-factory'
-const isHomeRoute = useRoute().path === '/';
+
+const route = useRoute()
+
+
+const hideSideBar = computed(() => {
+  return route.meta.hideSideBar !== false
+})
 
 </script>
 
 <template>
-  <div class="layout-container" v-if="isHomeRoute">
-    <div class="sidebar-container">
+  <div class="layout-container">
+    <div class="sidebar-container" v-if="hideSideBar">
       <ul>
         <li>
           <router-link to="/workspace">
@@ -35,7 +41,7 @@ const isHomeRoute = useRoute().path === '/';
           </router-link>
         </li>
         <li>
-          <router-link to="/login">
+          <router-link to="/signup">
             <i class="pi pi-user" style="color: #708090"></i> 
             <span>Adicionar advogado</span>
           </router-link>
@@ -43,8 +49,7 @@ const isHomeRoute = useRoute().path === '/';
       </ul>
     </div>
     <div class="main-content">
-      <slot></slot>
-  
+      <RouterView />
     </div>
   </div>
 </template>

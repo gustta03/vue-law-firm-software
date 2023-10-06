@@ -7,14 +7,18 @@ import CaseModal from '../../components/CasesModal.vue';
 
 import { DxButton } from 'devextreme-vue'
 
-import { makeRemoteGetWorkSpaces } from '../../../main/factories/usecases/workspace/load-workspace-tasks'
-import { makeRemoteDeleteTask } from '../../../main/factories/usecases/workspace/delete-workspace-factory'
 import { DxDataGrid, DxEditing, DxPaging, DxColumn, DxLookup } from 'devextreme-vue/data-grid'
-import { makeRemoteInsertTask } from '../../../main/factories/usecases/workspace/insert-workspace-factory'
-import { makeRemoteEditTask } from '../../../main/factories/usecases/workspace/edit-workspace-task-factory'
-import { makeRemoteDocument } from '../../../main/factories/usecases/documents/load-docment-factory'
-import { makeRemoteLoadCustomer } from '../../../main/factories/usecases/customer/load-customer-factory'
-import { makeRemoteLoadCases } from '../../../main/factories/usecases/cases/load-all-cases-factory'
+import { dependencies } from '../../dep';
+
+const {
+  getAllWorkSpace,
+  deleteWorkspaceTask,
+  insertWorkSpaceTask,
+  editWorkSpaceTask,
+  loadDocument,
+  loadCustomer,
+  loadCases,
+} = dependencies; 
 
 interface Task {
   description: string;
@@ -23,18 +27,10 @@ interface Task {
   id: string;
 }
 
-const getAllWorkSpace = makeRemoteGetWorkSpaces();
-const deleteWorkspaceTask = makeRemoteDeleteTask();
-const insertWorkSpaceTask = makeRemoteInsertTask();
-const editWorkSpaceTask = makeRemoteEditTask();
-const loadDocument = makeRemoteDocument();
-const loadCustomer = makeRemoteLoadCustomer();
-const loadCases = makeRemoteLoadCases();
-
 const workspaceData = ref<Task[]>([]);
 const isLoading = ref(true);
 const documentData = ref<any[]>([]);
-const customersData = ref<any[]>([]);
+const customersData = ref<Array<any>>([]);
 const isDocumentModalOpen = ref(false);
 const isCaseModalOpen = ref(false);
 const cases = ref<any[]>([]);
@@ -76,7 +72,6 @@ const workspaceTaskData = new CustomStore({
 
 const openDocumentModal = async () => {
   try {
-    customersData.value.push(await loadCustomer.load());
     isDocumentModalOpen.value = true;
     buttonActionType.value = 'doc';
   } catch (error) {
@@ -109,11 +104,10 @@ const hasData = computed(() => {
 
 <template>
   <MainContent page-title="Área de trabalho">
-    <div v-for="user in customersData" :key="user._id" :value="user._id">
+    <!-- <div v-for="user in customersData" :key="user._id" :value="user._id">
       <p>{{ user.address }}</p>
-    </div>
+    </div> -->
     <div v-if="isLoading">
-      <img :src="officeimg" />
       <h4>
         Reúna todas as suas atividades e estabeleça as tarefas mais importantes do dia em um único
         local
@@ -140,8 +134,8 @@ const hasData = computed(() => {
           :use-icons="true"
           key-expr="id"
         >
-          <DxEditing :allow-adding="true" :allow-updating="true" :allow-deleting="true" />
-          <DxColumn data-field="description" />
+        <DxEditing :allow-adding="true" :allow-updating="true" :allow-deleting="true" />
+        <DxColumn data-field="description" />
           <DxColumn data-field="owner" />
           <DxColumn data-field="priority" />
           <DxLookup :data-source="workspaceData" value-expr="id" display-expr="Ações" />
@@ -169,7 +163,6 @@ const hasData = computed(() => {
       </div>
     </div>
     <div v-else>
-      <img :src="officeimg" />
       <h4>Reúna todas as suas atividades...</h4>
       <p>Arrume, determine prioridades e finalize suas listas...</p>
     </div>
@@ -241,3 +234,4 @@ button {
   height: 50vh;
 }
 </style>
+../../dep

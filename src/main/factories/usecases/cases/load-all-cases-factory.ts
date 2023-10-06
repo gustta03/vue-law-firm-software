@@ -1,5 +1,5 @@
 import { AxiosHttpClient } from '../../../../infra/http/http-client'
-import { LoadAllCasesUseCase } from '../../../../usecases/cases/cases-usecase'
+import { LoadAllCasesUseCase } from '../../../../usecases/cases/http-cases-usecase'
 import { makeApiUrl } from '../../http/api-url-factory'
 
 export const makeRemoteLoadCases = () => {

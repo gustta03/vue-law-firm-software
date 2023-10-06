@@ -1,43 +1,31 @@
-import { DocumentModel } from '../../domain/models/documents-model';
-import { HttpClient, HttpStatusCode } from '../../infra/protocols/http-protocols';
-import {
-  SaveDocumentsUseCase,
-  DocumentResults,
-} from '../contracts/documents/documents-contracts';
+import { DocumentModel } from '../../domain/models/documents-model'
+import { HttpClient, HttpStatusCode } from '../../infra/protocols/http-protocols'
+import { SaveDocumentsUseCase, Document } from '../protocols/documents/documents-contracts'
 
 export class HttpSaveDocumentsUseCase implements SaveDocumentsUseCase {
   constructor(
     private url: string,
-    private readonly loadWorkSpaceRepository: HttpClient<DocumentModel>
+    private readonly saveDocumentRepository: HttpClient<DocumentModel>
   ) {}
 
-  async save(param: DocumentResults.Param): Promise<DocumentModel> {
-    const HttpResponse = await this.loadWorkSpaceRepository.request({
+  async save(param: Document.Param): Promise<any> {
+    const HttpResponse = await this.saveDocumentRepository.request({
       url: this.url,
       method: 'post',
-      body: param,
-    });
+      body: param
+    })
 
     switch (HttpResponse.statusCode) {
       case HttpStatusCode.created:
         if (HttpResponse.body !== undefined) {
-          return HttpResponse.body;
+          return HttpResponse.body
         } else {
-          throw new Error('Response body is undefined');
+          throw new Error('Response body is undefined')
         }
-      case HttpStatusCode.serverError:
-        throw new Error('Erro interno, tente novamente');
       case HttpStatusCode.badRequest:
-        if (
-          HttpResponse.body !== undefined &&
-          'error' in HttpResponse.body
-        ) {
-          throw new Error(HttpResponse.body.error as string);
-        } else {
-          throw new Error('Bad request response body is missing error property');
-        }
+        throw new Error('Verifique todos os campos')
       default:
-        throw new Error('Unhandled status code');
+        throw new Error('Unhandled status code')
     }
   }
 }

@@ -1,4 +1,5 @@
 export type CustomerResultModel = {
+  _id: string
   name: string
   phone: string
   email: string

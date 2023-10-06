@@ -1,4 +1,4 @@
-import { HttpResponse, HttpClient, HttpRequest } from '../contracts/http-protocol'
+import { HttpResponse, HttpClient, HttpRequest } from '../protocols/http-protocols'
 
 import axios, { AxiosResponse } from 'axios'
 

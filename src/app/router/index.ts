@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/Login/LoginView.vue'
-import HomeView from '../views/Home/HomeView.vue'
+import SignupView from '../views/SignUp/SignupView.vue'
 import WorkSpaceView from '../views/WorkSpace/WorkSpaceView.vue'
 import DocumentsView from '../views/Documents/DocumentsView.vue'
-import CustomerView from '../views/Customers/CustomersView.vue'
+import CustomersView from '../views/Customers/CustomersView.vue'
 import CaseView from '../views/Cases/CasesView.vue'
+import { isAuthenticated } from '../utils/tokenValidator'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,34 +13,53 @@ export const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      meta: { hideSideBar: false, requiresAuth: false }
     },
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      path: '/signup',
+      name: 'signup',
+      component: SignupView,
+      meta: { hideSideBar: false, requiresAuth: false }
     },
     {
       path: '/workspace',
       name: 'workspace',
-      component: WorkSpaceView
+      component: WorkSpaceView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/documents',
       name: 'documents',
-      component: DocumentsView
+      component: DocumentsView,
+      meta: { requiresAuth: true }
     },
     {
-      path: '/customers',
+      path: '/customer',
       name: 'customer',
-      component: CustomerView
+      component: CustomersView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/cases',
       name: 'cases',
-      component: CaseView
+      component: CaseView,
+      meta: { requiresAuth: true }
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (isAuthenticated()) {
+      next()
+    } else {
+      alert('Faça login primeiro!')
+      router.push('/login')
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

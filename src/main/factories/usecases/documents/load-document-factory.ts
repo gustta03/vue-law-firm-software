@@ -1,5 +1,5 @@
 import { AxiosHttpClient } from '../../../../infra/http/http-client'
-import { HttpLoadDocumentsUseCase } from '../../../../usecases/documents/http-documents'
+import { HttpLoadDocumentsUseCase } from '../../../../usecases/documents/http-load-documents'
 import { makeApiUrl } from '../../http/api-url-factory'
 
 export const makeRemoteDocument = () => {

@@ -1,14 +1,14 @@
-import { EditWorkSpaceUseCase, WorkSpaceResults } from '../contracts/workspace/workspace-contracts'
+import { EditWorkSpaceUseCase, WorkSpaceResults } from '../protocols/workspace/workspace-contracts'
 import { HttpClient, HttpStatusCode } from '../../infra/protocols/http-protocols'
 
 export class HttpEditTaskUseCase implements EditWorkSpaceUseCase {
   constructor(
     private apiUrl: string,
-    private readonly loadWorkSpaceRepository: HttpClient<WorkSpaceResults.successMessage>
+    private readonly editTaskRepository: HttpClient<WorkSpaceResults.successMessage>
   ) {}
 
   async edit(param: WorkSpaceResults.Param): Promise<WorkSpaceResults.successMessage> {
-    const HttpResponse = await this.loadWorkSpaceRepository.request({
+    const HttpResponse = await this.editTaskRepository.request({
       url: `${this.apiUrl}/${param.id}`,
       method: 'put',
       body: {

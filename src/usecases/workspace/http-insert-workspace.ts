@@ -1,14 +1,14 @@
 import { HttpClient, HttpStatusCode } from '../../infra/protocols/http-protocols'
-import { InsertWorkSpaceUseCase, WorkSpaceResults } from '../contracts/workspace/workspace-contracts'
+import { InsertWorkSpaceUseCase, WorkSpaceResults } from '../protocols/workspace/workspace-contracts'
 
 export class HttpInsertWorkSpaceTask implements InsertWorkSpaceUseCase {
   constructor(
     private url: string,
-    private readonly loadWorkSpaceRepository: HttpClient<WorkSpaceResults.successMessage>
+    private readonly insertWorkSpaceRepository: HttpClient<WorkSpaceResults.successMessage>
   ) {}
 
   async insert(param: WorkSpaceResults.Param): Promise<WorkSpaceResults.successMessage> {
-    const HttpResponse = await this.loadWorkSpaceRepository.request({
+    const HttpResponse = await this.insertWorkSpaceRepository.request({
       url: this.url,
       method: 'post',
       body: param

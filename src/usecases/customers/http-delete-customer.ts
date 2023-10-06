@@ -5,7 +5,7 @@ export class HttpDeleteCustomer implements DeleteCustomer {
   constructor(
     private apiUrl: string,
     private readonly deleteCustomerRepository: HttpClient<RemoteEdit.Message>
-  ) {}
+  ) { }
 
   async deleteById(id: string): Promise<Customer.Message> {
     const HttpResponse = await this.deleteCustomerRepository.request({
@@ -20,8 +20,6 @@ export class HttpDeleteCustomer implements DeleteCustomer {
         } else {
           throw new Error('Response body is undefined')
         }
-      case HttpStatusCode.forbidden:
-        throw new Error('Forbidden')
       default:
         throw new Error('Unhandled status code')
     }

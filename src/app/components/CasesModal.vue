@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DxPopup, DxButton } from 'devextreme-vue'
 import { ref, onMounted, watch } from 'vue'
-import { dependencies } from '../di'
+import { dependencies } from '../dep'
 import { DxToast } from 'devextreme-vue/toast'
 import CustomStore from 'devextreme/data/custom_store'
 
@@ -35,21 +35,14 @@ const formData = ref({
   customer: selectedCustomer.value.name,
   action_type: '',
   awarded_amount: 0,
-  involved_parties: [
-    {
-      name: ''
-    }
-  ],
+  involved_parties: [{ name: '' }],
   status: '',
   owner: '',
   protocol: '',
   casedata: ''
 })
 
-defineProps({
-  buttonActionType: String,
-  isModalOpen: Boolean
-})
+const props = defineProps(['buttonActionType', 'isModalOpen', 'reloadDataGridWithNewRow'])
 
 onMounted(async () => {
   return customersData.value.push(await loadCustomer.load())
@@ -65,10 +58,12 @@ async function handleSaveModalOnClick() {
     const httpResponse = await saveCase.save(formData.value)
     if (httpResponse) {
       showToast({ message: 'Caso salvo com sucesso', type: 'success' })
+      props.reloadDataGridWithNewRow()
       closeModal()
     } else {
-      showToast({ 
-        message: 'Caso salvo com sucesso, tente novamente!', type: 'error' 
+      showToast({
+        message: 'Ocorreu um erro inesperado, tente novamente!',
+        type: 'error'
       })
     }
 
@@ -77,7 +72,6 @@ async function handleSaveModalOnClick() {
     showToast({ message: error, type: 'error' })
   }
 }
-
 watch(
   () => isToastVisible.value,
   (newValue, oldValue) => {
@@ -88,7 +82,6 @@ watch(
     }
   }
 )
-
 const updateCustomerName = (customer: { id: string; name: string }) => {
   formData.value.customerId = customer.id
   formData.value.customer = customer.name
@@ -110,7 +103,6 @@ function showToast({ message, type }: { message: string; type: string }) {
   toastType.value = type
   toastMessage.value = message
 }
-
 </script>
 
 <template>
@@ -146,7 +138,7 @@ function showToast({ message, type }: { message: string; type: string }) {
       <label for="taskDescription">Valor concedido</label>
       <input type="number" v-model="formData.awarded_amount" />
       <input v-model="newPart" placeholder="Nome da Parte Envolvida" />
-    
+
       <p @click="addPartFromCase">Adicionar envolvido</p>
       <input type="text" />
       <label for="taskDescription">Responsaveis</label>
@@ -172,3 +164,4 @@ function showToast({ message, type }: { message: string; type: string }) {
   margin-left: 10px;
 }
 </style>
+../dep

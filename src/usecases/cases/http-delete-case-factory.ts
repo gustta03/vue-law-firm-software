@@ -20,8 +20,6 @@ export class HttpDeleteCase implements DeleteCase {
         } else {
           throw new Error('Response body is undefined')
         }
-      case HttpStatusCode.forbidden:
-        throw new Error('Forbidden')
       default:
         throw new Error('Unhandled status code')
     }

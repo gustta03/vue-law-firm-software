@@ -1,4 +1,3 @@
-import { DocumentModel } from '../../domain/models/documents-model'
 import { HttpClient, HttpStatusCode } from '../../infra/protocols/http-protocols'
 import { DeleteDocument, Document } from '../protocols/documents/documents-contracts'
 
@@ -21,8 +20,6 @@ export class HttpDeleteByIdDocumentsUseCase implements DeleteDocument {
         } else {
           throw new Error('Response body is undefined')
         }
-      case HttpStatusCode.forbidden:
-        throw new Error('Forbidden')
       default:
         throw new Error('Unhandled status code')
     }
@@ -35,4 +32,3 @@ export namespace RemoteDeleteDocument {
     message: string
   }
 }
-

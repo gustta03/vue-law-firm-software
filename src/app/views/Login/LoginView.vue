@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { makeCacheStorage } from '../../../main/factories/cache/local-storage-factory';
-import { makeRemoteSaveUser } from '../../../main/factories/usecases/user/save-user-factory'
+import { makeRemoteSaveUser } from '../../../main/factories/usecases/attorney/save-user-factory'
 import { ref } from 'vue'
 import router from '../../router/index'
 import { useRoute } from 'vue-router';
@@ -49,9 +49,12 @@ async function handleSubmitUser() {
         <label>Senha</label>
         <input type="password" placeholder="Digite sua senha" required v-model="password" />
       </div>
-
-      <button class="login-button" @submit.prevent="handleSubmitUser">Entrar</button>
-
+      <div class="login-button">
+         <button @submit.prevent="handleSubmitUser">Entrar</button>
+      </div>
+       <router-link to="/signup">
+            <span>Não tem uma conta?</span>
+          </router-link>
     </form>
   </div>
 </template>
@@ -68,28 +71,34 @@ async function handleSubmitUser() {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 auto;
-  width: 60%;
+  margin: 30px auto;
+  width: 50%;
   height: 20rem;
 }
 
 input {
-  display: block;
-  width: 90%;
+  width: 30%;
   margin: 0 auto;
   border: 1px solid #CBD5E1;
   margin: 0 0 20px 0;
   cursor: pointer;
-  padding: 10px 20px 10px 5px;
+  padding: 10px 0px 10px 0px;
 }
 
 .login-button {
-  width: 94%;
-  height: 54px;
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid #CBD5E1;
+  margin: 0 0 20px 0;
   cursor: pointer;
-  border: 0;
-  border-radius: 4px;
-  background-color: #237FD4;
-  color: #FFFF;
+}
+
+.login-button button {
+  display: block;
+  width: 100%;
+  margin: auto;
+  cursor: pointer;
+  padding: 10px 20px 10px 5px;
 }
 </style>

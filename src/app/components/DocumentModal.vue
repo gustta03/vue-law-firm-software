@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DxPopup, DxButton } from 'devextreme-vue'
 import { ref, watch, onMounted, } from 'vue'
-import { dependencies } from '../di'
+import { dependencies } from '../dep'
 import CustomStore from 'devextreme/data/custom_store';
 
 const { loadCustomer, saveDocument } = dependencies
@@ -19,10 +19,11 @@ const formData = ref({
   url: ''
 })
 
-defineProps({
-  buttonActionType: String,
-  isModalOpen: Boolean
-})
+const props = defineProps([
+  'buttonActionType',
+  'isModalOpen',
+  'reloadDataGridWithNewRow'
+]);
 
 onMounted(async () => {
   customersOptionsData.value.push(await loadCustomer.load())
@@ -38,7 +39,7 @@ async function insertDocumentAndCloseModal() {
     const httpResponse = await saveDocument.save(formData.value)
     if (httpResponse) {
       showToast({ message: 'Caso salvo com sucesso', type: 'success' })
-      this.$root.$emit('documentSaved', httpResponse);
+      props.reloadDataGridWithNewRow()
       closeModal()
     } else {
       showToast({ 
@@ -122,3 +123,4 @@ function showToast({ message, type }: { message: string; type: string }) {
   margin-left: 10px;
 }
 </style>
+../dep

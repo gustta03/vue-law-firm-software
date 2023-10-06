@@ -1,5 +1,5 @@
 import { HttpClient, HttpRequest, HttpStatusCode } from "../../infra/protocols/http-protocols"
-import { LoadWorkSpaceUseCase, WorkSpaceResults } from "../contracts/workspace/workspace-contracts"
+import { LoadWorkSpaceUseCase, WorkSpaceResults } from "../protocols/workspace/workspace-contracts"
 
 export class HttpLoadWorkSpaceUseCase implements LoadWorkSpaceUseCase {
   constructor(

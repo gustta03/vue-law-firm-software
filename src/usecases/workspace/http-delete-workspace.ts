@@ -3,16 +3,16 @@ import { HttpClient, HttpStatusCode } from '../../infra/protocols/http-protocols
 import {
   DeleteWorkSpaceUseCase,
   WorkSpaceResults
-} from '../contracts/workspace/workspace-contracts'
+} from '../protocols/workspace/workspace-contracts'
 
 export class HttpDeleteTaskUseCase implements DeleteWorkSpaceUseCase {
   constructor(
     private url: string,
-    private readonly loadWorkSpaceRepository: HttpClient<WorkSpaceResults.successMessage>
+    private readonly deleteTaskRepository: HttpClient<WorkSpaceResults.successMessage>
   ) {}
 
   async deleteById(id: string): Promise<WorkSpaceResults.successMessage> {
-    const HttpResponse = await this.loadWorkSpaceRepository.request({
+    const HttpResponse = await this.deleteTaskRepository.request({
       url: `${this.url}/${id}`,
       method: 'delete'
     })

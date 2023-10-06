@@ -9,7 +9,7 @@ export class HttpEditCustomer implements EditCustomer {
 
   async edit(params: Customer.Param): Promise<Customer.Message> {
     const HttpResponse = await this.editCustomerRepository.request({
-      url: `${this.apiUrl}/${params.id}`,
+      url: `${this.apiUrl}/${params._id}`,
       method: 'put',
       body: params
     })
@@ -21,8 +21,6 @@ export class HttpEditCustomer implements EditCustomer {
         } else {
           throw new Error('Response body is undefined')
         }
-      case HttpStatusCode.forbidden:
-        throw new Error('Forbidden')
       default:
         throw new Error('Unhandled status code')
     }
