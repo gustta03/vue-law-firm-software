@@ -24,7 +24,7 @@ export const router = createRouter({
     },
     {
       path: '/',
-      name: 'workspace',
+      name: '',
       component: WorkSpaceView,
       meta: { requiresAuth: true }
     },
