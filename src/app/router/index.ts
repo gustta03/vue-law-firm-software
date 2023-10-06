@@ -23,7 +23,7 @@ export const router = createRouter({
       meta: { hideSideBar: false, requiresAuth: false }
     },
     {
-      path: '/workspace',
+      path: '/',
       name: 'workspace',
       component: WorkSpaceView,
       meta: { requiresAuth: true }
