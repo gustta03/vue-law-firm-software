@@ -5,7 +5,7 @@ import WorkSpaceView from '../views/WorkSpace/WorkSpaceView.vue'
 import DocumentsView from '../views/Documents/DocumentsView.vue'
 import CustomersView from '../views/Customers/CustomersView.vue'
 import CaseView from '../views/Cases/CasesView.vue'
-import { isAuthenticated } from '../utils/tokenValidator'
+import { userIsLogged } from '../utils/isLoggedUtil'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,7 +51,7 @@ export const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (isAuthenticated()) {
+    if (userIsLogged()) {
       next()
     } else {
       alert('Faça login primeiro!')
