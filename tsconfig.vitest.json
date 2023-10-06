@@ -1,8 +1,15 @@
 {
   "extends": "./tsconfig.app.json",
   "exclude": [],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",   // Add this line to include .vue files
+    "src/**/*.json"
+  ],
   "files": [
-    "/home/gusta/Desktop/vue-enterprise-boilerplate/src/app/App.vue",
+    "/home/gusta/Desktop/vue-enterprise-boilerplate/src/app/",
     "/home/gusta/Desktop/vue-enterprise-boilerplate/src/infra/cache/local-storage.ts"
   ],
   "compilerOptions": {
