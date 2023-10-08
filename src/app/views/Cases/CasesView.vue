@@ -2,10 +2,17 @@
 import MainContent from '../../components/MainContent.vue'
 import CasesModal from '../../components/CasesModal.vue'
 
-import { DxDataGrid, DxEditing, DxPaging, DxColumn, DxLookup } from 'devextreme-vue/data-grid'
+import {
+  DxDataGrid,
+  DxColumn,
+  DxPaging,
+  DxEditing,
+  DxForm,
+  DxItem
+} from 'devextreme-vue/data-grid';
 import { ref } from 'vue'
 import { dependencies } from '../../dep'
-import { DxButton, DxPopup } from 'devextreme-vue'
+import { DxPopup, DxButton } from 'devextreme-vue'
 
 import DataSource from 'devextreme/data/data_source'
 
@@ -40,7 +47,6 @@ const documentData = new DataSource({
   }
 })
 
-
 const reloadDataGridWithNewRow = () => {
   documentData.reload();
 };
@@ -48,7 +54,8 @@ const reloadDataGridWithNewRow = () => {
 
 const handleRowClick = (e) => {
   selectedDocument.value = e.data
-  isModalRowOpen.value = true
+  isModalRowOpen.value = true; 
+  // isEditModalOpen.value = false; 
 }
 </script>
 
@@ -71,7 +78,6 @@ const handleRowClick = (e) => {
         :show-borders="true"
         :focused-row-enabled="true"
         :allow-updating="true"
-        :allow-deleting="true"
         :select-text-on-edit-start="true"
         :use-icons="true"
         key-expr="_id"
@@ -80,20 +86,23 @@ const handleRowClick = (e) => {
         <DxColumn data-field="customer" caption="Cliente" />
         <DxColumn data-field="casedata" caption="Descrição" />
         <DxColumn data-field="owner" caption="Propietario" />
-        <DxEditing :allow-updating="true" :allow-deleting="true" />
-        <DxLookup :data-source="documentData" value-expr="id" display-expr="Ações" />
+        <DxColumn data-field="awarded_amount" caption="Honorarios" />        
+        <DxEditing :allow-updating="true" :allow-deleting="true" mode="popup">
+            <DxForm>
+              <DxItem data-field="title" caption="Título" />
+              <DxItem data-field="customer" caption="Cliente" />
+              <DxItem data-field="casedata" caption="Descrição" />
+              <DxItem data-field="owner" caption="Propietario" />
+              <DxItem data-field="awarded_amount" caption="Honorarios" />
+              <DxItem data-field="status" caption="Status" />
+              <DxItem data-field="owner" caption="Propietario" />
+              <DxItem data-field="protocol" caption="Protocolo" />
+            </DxForm>
+       </DxEditing>
         <DxPaging :page-size="10" />
-        <div class="btn-add">
-          <DxEditing
-            :mode="'popup'"
-            :allow-adding="true"
-            :allow-updating="true"
-            :allow-deleting="true"
-          />
-        </div>
       </DxDataGrid>
 
-      <DxPopup :visible="isModalRowOpen" title="Detalhes do caso" :width="400" :height="380">
+      <DxPopup :visible="isModalRowOpen" title="Detalhes do caso" :width="500" :height="380">
         <p>
           Advogado Propietario: <b>{{ selectedDocument?.owner }}</b>
         </p>
@@ -106,10 +115,10 @@ const handleRowClick = (e) => {
         <p>
           Descrição do caso: <b>{{ selectedDocument?.casedata }}</b>
         </p>
-        <div>
+        <div class="involved-parties">
           <p>Partes envolvidas:</p>
           <b
-            class="involved_parties"
+            class="involved-card"
             v-for="(party, index) in selectedDocument?.involved_parties"
             :key="index"
           >
@@ -148,16 +157,29 @@ const handleRowClick = (e) => {
 }
 
 .involved_parties {
-  border: 1px solid #dddddd;
+  border: 1px solid red;
   width: 100%;
   margin-left: 3px;
+  height: auto;
   border-radius: 5px;
   padding: 10px;
+}
+
+.involved-card {
+  width: auto;
+  height: auto;
+  padding: 0 2px 0 2px 0;
+  border-radius: 5px;
 }
 
 .close-modal-btn {
   display: flex;
   justify-content: end;
 }
+
+:global(.popup-base-settings) {
+  border-radius: 20px !important;
+  background-color: red;
+  width: 200px;
+}
 </style>
-../../dep
