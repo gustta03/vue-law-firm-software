@@ -3,9 +3,10 @@ import { DxPopup, DxButton } from 'devextreme-vue'
 import { ref, watch, onMounted, } from 'vue'
 import { dependencies } from '../dep'
 import CustomStore from 'devextreme/data/custom_store';
+import { Customer } from '../types/customers.ts'
 
 const { loadCustomer, saveDocument } = dependencies
-const customersOptionsData = ref<Array<any>>([])
+const customersOptionsData = ref<Customer[]>([])
 const isToastVisible = ref(false)
 const toastMessage = ref('')
 const toastType = ref('success')
@@ -91,6 +92,7 @@ function showToast({ message, type }: { message: string; type: string }) {
       <input type="text" v-model="formData.title" />
       <label for="taskDescription">Descrição do documento</label>
       <input type="text" v-model="formData.description" />
+      <label for="taskDescription">Propietario</label>
       <input type="text" v-model="formData.owner" />
       <label>Cliente</label>
       <select class="select-customers" v-model="formData.customerId">
@@ -102,7 +104,7 @@ function showToast({ message, type }: { message: string; type: string }) {
 
       <!-- <input type="text" id="taskOwner" /> -->
       <label for="taskOwner">URL:</label>
-      <input type="text" id="taskOwner" v-model="formData.url" />
+      <input type="text" id="taskOwner" placeholder="https://drive.google.com/file/d/id" v-model="formData.url" />
       <div class="modal-buttons-container">
         <DxButton @click="documentData.load()">Salvar documento</DxButton>
         <DxButton id="btn-close" @click="closeModal">Fechar modal</DxButton>
