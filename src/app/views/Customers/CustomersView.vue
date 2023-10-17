@@ -50,12 +50,12 @@ async function handleSaveCustomerOnClick() {
   try {
     const httpResponse = await saveCustomer.save(formData.value)
     if (httpResponse) {
-      showToast({ message: 'Caso salvo com sucesso', type: 'success' })
+      showToast({ message: 'Cliente salvo com sucesso', type: 'success' })
       isModalOpen.value = false
       reloadDataGridWithNewRow()
     } else {
       showToast({
-        message: 'Caso salvo com sucesso, tente novamente!',
+        message: 'Ocorreu um erro, tente novamente!',
         type: 'error'
       })
     }
