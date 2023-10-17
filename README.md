@@ -4,7 +4,7 @@
 
 Sistema em VueJS para gestão de escrotório de advocacia usando  VueJs, Typescript e Clean Architecture proporcionando recursos essenciais para a gestão eficiente de advogados, clientes, processos/casos e documentos. Além disso, oferece uma área de agenda que permite a organização de tarefas diárias.
 
-Este é um projeto de estudos para treinar o que tenho aprendido em VueJs, podendo ser estendido com contribuição por outros desenvolvedores. Você pode checar o backend neste <a href="https://github.com/gustta03/api-tdd-clean-arch">repositório</a>
+Este é um projeto de estudo, criado para aplicar os conhecimentos adquiridos em Vue.js, e está aberto a contribuições de outros desenvolvedores. Você pode conferir o backend relacionado neste [repositório](https://github.com/gustta03/api-tdd-clean-arch).
 
 ## Recurso do projeto:
 
@@ -14,7 +14,7 @@ Este é um projeto de estudos para treinar o que tenho aprendido em VueJs, poden
 - organização de documentos: oferece a funcionalidade de adicionar documentos importantes relacionados a cada caso ou cliente.
 - Área de agenda: permite a organização de tarefas diárias, ajudando a priorizar e acompanhar as atividades do escritório.
 
-## Como executar:
+## Instalação:
 
 1. Certifique-se de tenha nodeJs intalado em sua máquina
 
@@ -30,8 +30,12 @@ cd vue-law-firm-software
 ```
 npm install
 ```
-5. Rode a aplição
+## Execução
+
+Após a conclusão da instalação e configuração, você pode executar o projeto com o seguinte comando:
+
 ```
 npm run dev
 ```
+ a aplicação estará disponível no seguinte endereço: http://localhost:8080/
 
