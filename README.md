@@ -20,7 +20,7 @@ Este é um projeto de estudo, criado para aplicar os conhecimentos adquiridos em
 
 2. Clone o repositório:
 ```
-https://github.com/gustta03/vue-law-firm-software.git)https://github.com/gustta03/vue-law-firm-software.git
+https://github.com/gustta03/vue-law-firm-software.git
 ```
 3. Navegue para a Pasta do Projeto:
 ```
