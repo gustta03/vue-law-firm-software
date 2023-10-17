@@ -15,7 +15,7 @@ const password = ref('')
 function setValuesOnSubmitUser(response: string) {
   data.value = response
   cache.set('admin:accessToken', response)
-  router.push('/workspace')
+  router.push('/')
 }
 
 async function handleSubmitUser() {

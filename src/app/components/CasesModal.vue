@@ -95,6 +95,7 @@ const closeModal = () => {
 
 const addPartFromCase = () => {
   formData.value.involved_parties.push({ name: newPart.value })
+  console.log(involved_parties.value)
   newPart.value = ''
 }
 
@@ -117,7 +118,6 @@ function showToast({ message, type }: { message: string; type: string }) {
       <label for="taskOwner">Titulo:</label>
       <input v-model="formData.title" type="text" id="taskOwner" />
       <label>Cliente</label>
-      <label>Cliente</label>
       <select class="select-customers" v-model="selectedCustomer">
         <option disabled value="">Selecione um usuário</option>
         <option
@@ -138,9 +138,8 @@ function showToast({ message, type }: { message: string; type: string }) {
       <label for="taskDescription">Valor concedido</label>
       <input type="number" v-model="formData.awarded_amount" />
       <input v-model="newPart" placeholder="Nome da Parte Envolvida" />
-
-      <p @click="addPartFromCase">Adicionar envolvido</p>
-      <input type="text" />
+      <div v-for="(item, index) in formData.involved_parties" :key="index">{{ item.name }}</div>
+      <div class="involved-btn" @click="addPartFromCase">Adicionar envolvido</div>
       <label for="taskDescription">Responsaveis</label>
       <input type="text" v-model="formData.owner" />
       <label for="taskOwner">Status</label>
@@ -163,5 +162,14 @@ function showToast({ message, type }: { message: string; type: string }) {
 #btn-close {
   margin-left: 10px;
 }
+
+.involved-btn {
+  width: 40%;
+  cursor: pointer;
+  padding: 10px 0 10px  5px;
+  border: 1px solid #dee2e6;
+  margin-bottom: 10px;
+}
+
 </style>
 ../dep
