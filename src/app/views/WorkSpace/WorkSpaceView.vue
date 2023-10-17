@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import MainContent from '../../components/MainContent.vue';
-import CustomStore from 'devextreme/data/custom_store';
-import DocumentModal from '../../components/DocumentModal.vue';
-import CaseModal from '../../components/CasesModal.vue';
+import { ref, onMounted, computed } from 'vue'
+import MainContent from '../../components/MainContent.vue'
+import CustomStore from 'devextreme/data/custom_store'
+import DocumentModal from '../../components/DocumentModal.vue'
+import CaseModal from '../../components/CasesModal.vue'
 
 import { DxButton } from 'devextreme-vue'
 
 import { DxDataGrid, DxEditing, DxPaging, DxColumn, DxLookup } from 'devextreme-vue/data-grid'
-import { dependencies } from '../../dep';
+import { dependencies } from '../../dep'
+import { Customer } from '../types/customers.ts'
+import { DocumentsTypes } from '../types/documents'
+import { Case } from '../types/case'
+import DxSankey, { DxTitle, DxSubtitle } from 'devextreme-vue/sankey'
 
 const {
   getAllWorkSpace,
@@ -17,35 +21,37 @@ const {
   editWorkSpaceTask,
   loadDocument,
   loadCustomer,
-  loadCases,
-} = dependencies; 
+  loadCases
+} = dependencies
 
 interface Task {
-  description: string;
-  owner: string;
-  priority: string;
-  id: string;
+  description: string
+  owner: string
+  priority: string
+  id: string
 }
 
-const workspaceData = ref<Task[]>([]);
-const isLoading = ref(true);
-const documentData = ref<any[]>([]);
-const customersData = ref<Array<any>>([]);
-const isDocumentModalOpen = ref(false);
-const isCaseModalOpen = ref(false);
-const cases = ref<any[]>([]);
-const buttonActionType = ref<'cases' | 'doc' | null>(null);
+const workspaceData = ref<Task[]>([])
+
+const documentData = ref<DocumentsTypes[]>([])
+const customersData = ref<Customer[]>([])
+const cases = ref<Case[]>([])
+
+const isLoading = ref(true)
+const isDocumentModalOpen = ref(false)
+const isCaseModalOpen = ref(false)
+const buttonActionType = ref<'cases' | 'doc' | null>(null)
 
 onMounted(async () => {
   try {
-    documentData.value.push(await loadDocument.load());
-    workspaceData.value.push(await getAllWorkSpace.load());
-    cases.value.push(await loadCases.load());
-    isLoading.value = false;
+    documentData.value.push(await loadDocument.load())
+    workspaceData.value.push(await getAllWorkSpace.load())
+    cases.value.push(await loadCases.load())
+    isLoading.value = false
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error)
   }
-});
+})
 
 const workspaceTaskData = new CustomStore({
   key: 'id',
@@ -53,60 +59,57 @@ const workspaceTaskData = new CustomStore({
   load: async () => await getAllWorkSpace.load(),
   remove: async (key: string) => {
     try {
-      await deleteWorkspaceTask.deleteById(key);
+      await deleteWorkspaceTask.deleteById(key)
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error)
     }
   },
   update: async (key, values) => {
     try {
       await editWorkSpaceTask.edit({
         id: key,
-        ...values,
-      });
+        ...values
+      })
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error)
     }
-  },
-});
+  }
+})
 
 const openDocumentModal = async () => {
   try {
-    isDocumentModalOpen.value = true;
-    buttonActionType.value = 'doc';
+    isDocumentModalOpen.value = true
+    buttonActionType.value = 'doc'
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error)
   }
-};
+}
 
 const openCaseModal = async () => {
   try {
-    customersData.value.push(await loadCustomer.load());
-    isCaseModalOpen.value = true;
-    buttonActionType.value = 'cases';
+    customersData.value.push(await loadCustomer.load())
+    isCaseModalOpen.value = true
+    buttonActionType.value = 'cases'
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error)
   }
-};
+}
 
 const documentLength = computed(() => {
-  return Object.keys(documentData.value[0] || {}).length;
-});
+  return Object.keys(documentData.value[0] || {}).length
+})
 
 const casesLength = computed(() => {
-  return Object.keys(cases.value[0] || {}).length;
-});
+  return Object.keys(cases.value[0] || {}).length
+})
 
 const hasData = computed(() => {
-  return workspaceData.value.length > 0;
-});
+  return workspaceData.value.length > 0
+})
 </script>
 
 <template>
   <MainContent page-title="Área de trabalho">
-    <!-- <div v-for="user in customersData" :key="user._id" :value="user._id">
-      <p>{{ user.address }}</p>
-    </div> -->
     <div v-if="isLoading">
       <h4>
         Reúna todas as suas atividades e estabeleça as tarefas mais importantes do dia em um único
@@ -119,11 +122,9 @@ const hasData = computed(() => {
         </p>
       </span>
     </div>
-    <div v-else-if="hasData" class="grid-container">
+    
+    <div v-if="hasData" class="grid-container">
       <div class="custom-data-grid">
-        <!-- Adicione o componente CustomAddButton aqui -->
-        <CustomAddButton />
-
         <DxDataGrid
           :data-source="workspaceTaskData"
           :show-borders="true"
@@ -134,8 +135,8 @@ const hasData = computed(() => {
           :use-icons="true"
           key-expr="id"
         >
-        <DxEditing :allow-adding="true" :allow-updating="true" :allow-deleting="true" />
-        <DxColumn data-field="description" />
+          <DxEditing :allow-adding="true" :allow-updating="true" :allow-deleting="true" />
+          <DxColumn data-field="description" />
           <DxColumn data-field="owner" />
           <DxColumn data-field="priority" />
           <DxLookup :data-source="workspaceData" value-expr="id" display-expr="Ações" />
@@ -155,9 +156,19 @@ const hasData = computed(() => {
             <p>Documentos</p>
             <DxButton @click="openDocumentModal" text="Adicionar" />
           </div>
-          
-           <DocumentModal :data="customersData" button-action-type="doc" :is-modal-open="isDocumentModalOpen" @close-modal="isDocumentModalOpen = false" />
-           <CaseModal button-action-type="Processos e casos" :data="customersData" :is-modal-open="isCaseModalOpen" @close-modal="isCaseModalOpen = false" />
+
+          <DocumentModal
+            :data="customersData"
+            button-action-type="doc"
+            :is-modal-open="isDocumentModalOpen"
+            @close-modal="isDocumentModalOpen = false"
+          />
+          <CaseModal
+            button-action-type="Processos e casos"
+            :data="customersData"
+            :is-modal-open="isCaseModalOpen"
+            @close-modal="isCaseModalOpen = false"
+          />
           <p>Documentos movimentados recentemente: {{ documentLength }}</p>
         </div>
       </div>

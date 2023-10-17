@@ -82,7 +82,7 @@ input {
   border: 1px solid #CBD5E1;
   margin: 0 0 20px 0;
   cursor: pointer;
-  padding: 10px 0px 10px 0px;
+  padding: 10px 0px 10px 10px;
 }
 
 .login-button {
